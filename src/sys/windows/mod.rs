@@ -9,47 +9,48 @@
 // except according to those terms.
 
 #![allow(missing_docs, bad_style)]
+#![allow(dead_code)]
 
-use ptr;
-use ffi::{OsStr, OsString};
-use io::{self, ErrorKind};
-use os::windows::ffi::{OsStrExt, OsStringExt};
-use path::PathBuf;
-use time::Duration;
+use std::ptr;
+use std::ffi::{OsStr, OsString};
+use std::io::{self, ErrorKind};
+use std::os::windows::ffi::{OsStrExt, OsStringExt};
+use std::path::PathBuf;
+use std::time::Duration;
 
 pub use libc::strlen;
-pub use self::rand::hashmap_random_keys;
+// pub use self::rand::hashmap_random_keys;
 
 #[macro_use] pub mod compat;
 
-pub mod args;
-#[cfg(feature = "backtrace")]
-pub mod backtrace;
+// pub mod args;
+// #[cfg(feature = "backtrace")]
+// pub mod backtrace;
 pub mod c;
-pub mod cmath;
-pub mod condvar;
-#[cfg(feature = "backtrace")]
-pub mod dynamic_lib;
-pub mod env;
+// pub mod cmath;
+// pub mod condvar;
+// #[cfg(feature = "backtrace")]
+// pub mod dynamic_lib;
+// pub mod env;
 pub mod ext;
-pub mod fast_thread_local;
-pub mod fs;
-pub mod handle;
-pub mod memchr;
-pub mod mutex;
+// pub mod fast_thread_local;
+// pub mod fs;
+// pub mod handle;
+// pub mod memchr;
+// pub mod mutex;
 pub mod net;
-pub mod os;
-pub mod os_str;
-pub mod path;
-pub mod pipe;
-pub mod process;
-pub mod rand;
-pub mod rwlock;
-pub mod stack_overflow;
-pub mod thread;
-pub mod thread_local;
-pub mod time;
-pub mod stdio;
+// pub mod os;
+// pub mod os_str;
+// pub mod path;
+// pub mod pipe;
+// pub mod process;
+// pub mod rand;
+// pub mod rwlock;
+// pub mod stack_overflow;
+// pub mod thread;
+// pub mod thread_local;
+// pub mod time;
+// pub mod stdio;
 
 #[cfg(not(test))]
 pub fn init() {
@@ -269,5 +270,5 @@ pub fn dur2timeout(dur: Duration) -> c::DWORD {
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub unsafe fn abort_internal() -> ! {
     asm!("int $$0x29" :: "{ecx}"(7) ::: volatile); // 7 is FAST_FAIL_FATAL_APP_EXIT
-    ::intrinsics::unreachable();
+    std::intrinsics::unreachable();
 }

@@ -8,18 +8,20 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use cmp;
-use ffi::CString;
-use fmt;
-use io::{self, Error, ErrorKind};
+#![allow(dead_code)]
+
+use std::cmp;
+use std::ffi::CString;
+use std::fmt;
+use std::io::{self, Error, ErrorKind};
 use libc::{c_int, c_void};
-use mem;
+use std::mem;
 use net::{SocketAddr, Shutdown, Ipv4Addr, Ipv6Addr};
-use ptr;
+use std::ptr;
 use sys::net::{cvt, cvt_r, cvt_gai, Socket, init, wrlen_t};
 use sys::net::netc as c;
 use sys_common::{AsInner, FromInner, IntoInner};
-use time::Duration;
+use std::time::Duration;
 
 #[cfg(any(target_os = "dragonfly", target_os = "freebsd",
           target_os = "ios", target_os = "macos",

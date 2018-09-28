@@ -8,20 +8,23 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![unstable(issue = "0", feature = "windows_net")]
+// #![unstable(issue = "0", feature = "windows_net")]
 
-use cmp;
-use io::{self, Read};
+#![allow(non_camel_case_types)]
+
+use std::cmp;
+use std::io::{self, Read};
 use libc::{c_int, c_void, c_ulong, c_long};
-use mem;
+use std::mem;
 use net::{SocketAddr, Shutdown};
-use ptr;
-use sync::Once;
+use std::ptr;
+// use std::sync::Once;
 use sys::c;
 use sys;
-use sys_common::{self, AsInner, FromInner, IntoInner};
+// use sys_common::{self, AsInner, FromInner, IntoInner};
+use sys_common::{AsInner, FromInner, IntoInner};
 use sys_common::net;
-use time::Duration;
+use std::time::Duration;
 
 pub type wrlen_t = i32;
 
@@ -38,16 +41,16 @@ pub struct Socket(c::SOCKET);
 /// Checks whether the Windows socket interface has been started already, and
 /// if not, starts it.
 pub fn init() {
-    static START: Once = Once::new();
+    // static START: Once = Once::new();
 
-    START.call_once(|| unsafe {
-        let mut data: c::WSADATA = mem::zeroed();
-        let ret = c::WSAStartup(0x202, // version 2.2
-                                &mut data);
-        assert_eq!(ret, 0);
+    // START.call_once(|| unsafe {
+    //     let mut data: c::WSADATA = mem::zeroed();
+    //     let ret = c::WSAStartup(0x202, // version 2.2
+    //                             &mut data);
+    //     assert_eq!(ret, 0);
 
-        let _ = sys_common::at_exit(|| { c::WSACleanup(); });
-    });
+    //     let _ = sys_common::at_exit(|| { c::WSACleanup(); });
+    // });
 }
 
 /// Returns the last error from the Windows socket interface.
@@ -104,6 +107,10 @@ impl Socket {
             SocketAddr::V4(..) => c::AF_INET,
             SocketAddr::V6(..) => c::AF_INET6,
         };
+        Socket::new_raw(fam, ty)
+    }
+
+    pub fn new_raw(fam: c_int, ty: c_int) -> io::Result<Socket> {
         let socket = unsafe {
             match c::WSASocketW(fam, ty, 0, ptr::null_mut(), 0,
                                 c::WSA_FLAG_OVERLAPPED) {
@@ -114,6 +121,9 @@ impl Socket {
         socket.set_no_inherit()?;
         Ok(socket)
     }
+
+    // socketpair() not supported on Windows
+    // pub fn new_pair(fam: c_int, ty: c_int) -> io::Result<(Socket, Socket)> { ... }
 
     pub fn connect_timeout(&self, addr: &SocketAddr, timeout: Duration) -> io::Result<()> {
         self.set_nonblocking(true)?;
@@ -326,7 +336,7 @@ impl Socket {
     }
 }
 
-#[unstable(reason = "not public", issue = "0", feature = "fd_read")]
+// #[unstable(reason = "not public", issue = "0", feature = "fd_read")]
 impl<'a> Read for &'a Socket {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         (**self).read(buf)

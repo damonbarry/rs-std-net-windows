@@ -10,15 +10,16 @@
 
 //! C definitions used by libnative that don't belong in liblibc
 
+#![allow(dead_code)]
 #![allow(bad_style)]
 #![cfg_attr(test, allow(dead_code))]
-#![unstable(issue = "0", feature = "windows_c")]
+// #![unstable(issue = "0", feature = "windows_c")]
 
 use os::raw::{c_int, c_uint, c_ulong, c_long, c_longlong, c_ushort, c_char};
 #[cfg(target_arch = "x86_64")]
 use os::raw::c_ulonglong;
 use libc::{wchar_t, size_t, c_void};
-use ptr;
+use std::ptr;
 
 pub use self::FILE_INFO_BY_HANDLE_CLASS::*;
 pub use self::EXCEPTION_DISPOSITION::*;
@@ -436,7 +437,7 @@ pub struct MOUNT_POINT_REPARSE_BUFFER {
     pub PathBuffer: WCHAR,
 }
 
-pub type LPPROGRESS_ROUTINE = ::option::Option<unsafe extern "system" fn(
+pub type LPPROGRESS_ROUTINE = ::std::option::Option<unsafe extern "system" fn(
     TotalFileSize: LARGE_INTEGER,
     TotalBytesTransferred: LARGE_INTEGER,
     StreamSize: LARGE_INTEGER,

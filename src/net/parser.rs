@@ -13,10 +13,10 @@
 //! This module is "publicly exported" through the `FromStr` implementations
 //! below.
 
-use error::Error;
-use fmt;
+use std::error::Error;
+use std::fmt;
 use net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
-use str::FromStr;
+use std::str::FromStr;
 
 struct Parser<'a> {
     // parsing as ASCII, so can use byte array
@@ -297,7 +297,7 @@ impl<'a> Parser<'a> {
     }
 }
 
-#[stable(feature = "ip_addr", since = "1.7.0")]
+// #[stable(feature = "ip_addr", since = "1.7.0")]
 impl FromStr for IpAddr {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<IpAddr, AddrParseError> {
@@ -308,7 +308,7 @@ impl FromStr for IpAddr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl FromStr for Ipv4Addr {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<Ipv4Addr, AddrParseError> {
@@ -319,7 +319,7 @@ impl FromStr for Ipv4Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl FromStr for Ipv6Addr {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<Ipv6Addr, AddrParseError> {
@@ -330,7 +330,7 @@ impl FromStr for Ipv6Addr {
     }
 }
 
-#[stable(feature = "socket_addr_from_str", since = "1.5.0")]
+// #[stable(feature = "socket_addr_from_str", since = "1.5.0")]
 impl FromStr for SocketAddrV4 {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<SocketAddrV4, AddrParseError> {
@@ -341,7 +341,7 @@ impl FromStr for SocketAddrV4 {
     }
 }
 
-#[stable(feature = "socket_addr_from_str", since = "1.5.0")]
+// #[stable(feature = "socket_addr_from_str", since = "1.5.0")]
 impl FromStr for SocketAddrV6 {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<SocketAddrV6, AddrParseError> {
@@ -352,7 +352,7 @@ impl FromStr for SocketAddrV6 {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl FromStr for SocketAddr {
     type Err = AddrParseError;
     fn from_str(s: &str) -> Result<SocketAddr, AddrParseError> {
@@ -395,18 +395,18 @@ impl FromStr for SocketAddr {
 /// [`SocketAddr`]: ../../std/net/enum.SocketAddr.html
 /// [`SocketAddrV4`]: ../../std/net/struct.SocketAddrV4.html
 /// [`SocketAddrV6`]: ../../std/net/struct.SocketAddrV6.html
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AddrParseError(());
 
-#[stable(feature = "addr_parse_error_error", since = "1.4.0")]
+// #[stable(feature = "addr_parse_error_error", since = "1.4.0")]
 impl fmt::Display for AddrParseError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(self.description())
     }
 }
 
-#[stable(feature = "addr_parse_error_error", since = "1.4.0")]
+// #[stable(feature = "addr_parse_error_error", since = "1.4.0")]
 impl Error for AddrParseError {
     fn description(&self) -> &str {
         "invalid IP address syntax"

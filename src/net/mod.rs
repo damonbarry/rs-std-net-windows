@@ -36,28 +36,30 @@
 //! [`ToSocketAddrs`]: ../../std/net/trait.ToSocketAddrs.html
 //! [`UdpSocket`]: ../../std/net/struct.UdpSocket.html
 
-#![stable(feature = "rust1", since = "1.0.0")]
+// #![stable(feature = "rust1", since = "1.0.0")]
 
-use io::{self, Error, ErrorKind};
+#![allow(dead_code)]
 
-#[stable(feature = "rust1", since = "1.0.0")]
+use std::io::{self, Error, ErrorKind};
+
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::ip::{IpAddr, Ipv4Addr, Ipv6Addr, Ipv6MulticastScope};
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::addr::{SocketAddr, SocketAddrV4, SocketAddrV6, ToSocketAddrs};
-#[stable(feature = "rust1", since = "1.0.0")]
-pub use self::tcp::{TcpStream, TcpListener, Incoming};
-#[stable(feature = "rust1", since = "1.0.0")]
-pub use self::udp::UdpSocket;
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
+// pub use self::tcp::{TcpStream, TcpListener, Incoming};
+// #[stable(feature = "rust1", since = "1.0.0")]
+// pub use self::udp::UdpSocket;
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::parser::AddrParseError;
 
 mod ip;
 mod addr;
-mod tcp;
-mod udp;
+// mod tcp;
+// mod udp;
 mod parser;
-#[cfg(test)]
-mod test;
+// #[cfg(test)]
+// mod test;
 
 /// Possible values which can be passed to the [`shutdown`] method of
 /// [`TcpStream`].
@@ -65,7 +67,7 @@ mod test;
 /// [`shutdown`]: struct.TcpStream.html#method.shutdown
 /// [`TcpStream`]: struct.TcpStream.html
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub enum Shutdown {
     /// The reading portion of the [`TcpStream`] should be shut down.
     ///
@@ -74,7 +76,7 @@ pub enum Shutdown {
     /// [`TcpStream`]: ../../std/net/struct.TcpStream.html
     /// [reads]: ../../std/io/trait.Read.html
     /// [`Ok(0)`]: ../../std/result/enum.Result.html#variant.Ok
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     Read,
     /// The writing portion of the [`TcpStream`] should be shut down.
     ///
@@ -82,7 +84,7 @@ pub enum Shutdown {
     ///
     /// [`TcpStream`]: ../../std/net/struct.TcpStream.html
     /// [writes]: ../../std/io/trait.Write.html
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     Write,
     /// Both the reading and the writing portions of the [`TcpStream`] should be shut down.
     ///
@@ -91,7 +93,7 @@ pub enum Shutdown {
     /// [`TcpStream`]: ../../std/net/struct.TcpStream.html
     /// [`Shutdown::Read`]: #variant.Read
     /// [`Shutdown::Write`]: #variant.Write
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     Both,
 }
 

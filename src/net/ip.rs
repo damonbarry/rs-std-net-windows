@@ -8,15 +8,15 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![unstable(feature = "ip", reason = "extra functionality has not been \
-                                      scrutinized to the level that it should \
-                                      be to be stable",
-            issue = "27709")]
+// #![unstable(feature = "ip", reason = "extra functionality has not been \
+//                                       scrutinized to the level that it should \
+//                                       be to be stable",
+//             issue = "27709")]
 
-use cmp::Ordering;
-use fmt;
-use hash;
-use mem;
+use std::cmp::Ordering;
+use std::fmt;
+use std::hash;
+use std::mem;
 use net::{hton, ntoh};
 use sys::net::netc as c;
 use sys_common::{AsInner, FromInner};
@@ -46,15 +46,17 @@ use sys_common::{AsInner, FromInner};
 /// assert_eq!(localhost_v4.is_ipv6(), false);
 /// assert_eq!(localhost_v4.is_ipv4(), true);
 /// ```
-#[stable(feature = "ip_addr", since = "1.7.0")]
+// #[stable(feature = "ip_addr", since = "1.7.0")]
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Hash, PartialOrd, Ord)]
 pub enum IpAddr {
     /// An IPv4 address.
-    #[stable(feature = "ip_addr", since = "1.7.0")]
-    V4(#[stable(feature = "ip_addr", since = "1.7.0")] Ipv4Addr),
+    // #[stable(feature = "ip_addr", since = "1.7.0")]
+    // V4(#[stable(feature = "ip_addr", since = "1.7.0")] Ipv4Addr),
+    V4(Ipv4Addr),
     /// An IPv6 address.
-    #[stable(feature = "ip_addr", since = "1.7.0")]
-    V6(#[stable(feature = "ip_addr", since = "1.7.0")] Ipv6Addr),
+    // #[stable(feature = "ip_addr", since = "1.7.0")]
+    // V6(#[stable(feature = "ip_addr", since = "1.7.0")] Ipv6Addr),
+    V6(Ipv6Addr),
 }
 
 /// An IPv4 address.
@@ -87,7 +89,7 @@ pub enum IpAddr {
 /// assert_eq!(localhost.is_loopback(), true);
 /// ```
 #[derive(Copy)]
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Ipv4Addr {
     inner: c::in_addr,
 }
@@ -125,7 +127,7 @@ pub struct Ipv4Addr {
 /// assert_eq!(localhost.is_loopback(), true);
 /// ```
 #[derive(Copy)]
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 pub struct Ipv6Addr {
     inner: c::in6_addr,
 }
@@ -160,7 +162,7 @@ impl IpAddr {
     /// assert_eq!(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)).is_unspecified(), true);
     /// assert_eq!(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)).is_unspecified(), true);
     /// ```
-    #[stable(feature = "ip_shared", since = "1.12.0")]
+    // #[stable(feature = "ip_shared", since = "1.12.0")]
     pub fn is_unspecified(&self) -> bool {
         match *self {
             IpAddr::V4(ref a) => a.is_unspecified(),
@@ -185,7 +187,7 @@ impl IpAddr {
     /// assert_eq!(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)).is_loopback(), true);
     /// assert_eq!(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0x1)).is_loopback(), true);
     /// ```
-    #[stable(feature = "ip_shared", since = "1.12.0")]
+    // #[stable(feature = "ip_shared", since = "1.12.0")]
     pub fn is_loopback(&self) -> bool {
         match *self {
             IpAddr::V4(ref a) => a.is_loopback(),
@@ -239,7 +241,7 @@ impl IpAddr {
     /// assert_eq!(IpAddr::V4(Ipv4Addr::new(224, 254, 0, 0)).is_multicast(), true);
     /// assert_eq!(IpAddr::V6(Ipv6Addr::new(0xff00, 0, 0, 0, 0, 0, 0, 0)).is_multicast(), true);
     /// ```
-    #[stable(feature = "ip_shared", since = "1.12.0")]
+    // #[stable(feature = "ip_shared", since = "1.12.0")]
     pub fn is_multicast(&self) -> bool {
         match *self {
             IpAddr::V4(ref a) => a.is_multicast(),
@@ -293,7 +295,7 @@ impl IpAddr {
     ///                false);
     /// }
     /// ```
-    #[stable(feature = "ipaddr_checker", since = "1.16.0")]
+    // #[stable(feature = "ipaddr_checker", since = "1.16.0")]
     pub fn is_ipv4(&self) -> bool {
         match *self {
             IpAddr::V4(_) => true,
@@ -318,7 +320,7 @@ impl IpAddr {
     ///                true);
     /// }
     /// ```
-    #[stable(feature = "ipaddr_checker", since = "1.16.0")]
+    // #[stable(feature = "ipaddr_checker", since = "1.16.0")]
     pub fn is_ipv6(&self) -> bool {
         match *self {
             IpAddr::V4(_) => false,
@@ -339,7 +341,7 @@ impl Ipv4Addr {
     ///
     /// let addr = Ipv4Addr::new(127, 0, 0, 1);
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn new(a: u8, b: u8, c: u8, d: u8) -> Ipv4Addr {
         Ipv4Addr {
             inner: c::in_addr {
@@ -362,12 +364,12 @@ impl Ipv4Addr {
     /// let addr = Ipv4Addr::localhost();
     /// assert_eq!(addr, Ipv4Addr::new(127, 0, 0, 1));
     /// ```
-    #[unstable(feature = "ip_constructors",
-               reason = "requires greater scrutiny before stabilization",
-               issue = "44582")]
-    pub fn localhost() -> Ipv4Addr {
-        Ipv4Addr::new(127, 0, 0, 1)
-    }
+    // #[unstable(feature = "ip_constructors",
+    //            reason = "requires greater scrutiny before stabilization",
+    //            issue = "44582")]
+    // pub fn localhost() -> Ipv4Addr {
+    //     Ipv4Addr::new(127, 0, 0, 1)
+    // }
 
     /// Creates a new IPv4 address representing an unspecified address: 0.0.0.0
     ///
@@ -380,12 +382,12 @@ impl Ipv4Addr {
     /// let addr = Ipv4Addr::unspecified();
     /// assert_eq!(addr, Ipv4Addr::new(0, 0, 0, 0));
     /// ```
-    #[unstable(feature = "ip_constructors",
-               reason = "requires greater scrutiny before stabilization",
-               issue = "44582")]
-    pub fn unspecified() -> Ipv4Addr {
-        Ipv4Addr::new(0, 0, 0, 0)
-    }
+    // #[unstable(feature = "ip_constructors",
+    //            reason = "requires greater scrutiny before stabilization",
+    //            issue = "44582")]
+    // pub fn unspecified() -> Ipv4Addr {
+    //     Ipv4Addr::new(0, 0, 0, 0)
+    // }
 
     /// Returns the four eight-bit integers that make up this address.
     ///
@@ -397,7 +399,7 @@ impl Ipv4Addr {
     /// let addr = Ipv4Addr::new(127, 0, 0, 1);
     /// assert_eq!(addr.octets(), [127, 0, 0, 1]);
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn octets(&self) -> [u8; 4] {
         let bits = ntoh(self.inner.s_addr);
         [(bits >> 24) as u8, (bits >> 16) as u8, (bits >> 8) as u8, bits as u8]
@@ -419,7 +421,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(0, 0, 0, 0).is_unspecified(), true);
     /// assert_eq!(Ipv4Addr::new(45, 22, 13, 197).is_unspecified(), false);
     /// ```
-    #[stable(feature = "ip_shared", since = "1.12.0")]
+    // #[stable(feature = "ip_shared", since = "1.12.0")]
     pub fn is_unspecified(&self) -> bool {
         self.inner.s_addr == 0
     }
@@ -439,7 +441,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(127, 0, 0, 1).is_loopback(), true);
     /// assert_eq!(Ipv4Addr::new(45, 22, 13, 197).is_loopback(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_loopback(&self) -> bool {
         self.octets()[0] == 127
     }
@@ -468,7 +470,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(192, 168, 0, 2).is_private(), true);
     /// assert_eq!(Ipv4Addr::new(192, 169, 0, 2).is_private(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_private(&self) -> bool {
         match (self.octets()[0], self.octets()[1]) {
             (10, _) => true,
@@ -494,7 +496,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(169, 254, 10, 65).is_link_local(), true);
     /// assert_eq!(Ipv4Addr::new(16, 89, 10, 65).is_link_local(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_link_local(&self) -> bool {
         self.octets()[0] == 169 && self.octets()[1] == 254
     }
@@ -551,7 +553,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(236, 168, 10, 65).is_multicast(), true);
     /// assert_eq!(Ipv4Addr::new(172, 16, 10, 65).is_multicast(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_multicast(&self) -> bool {
         self.octets()[0] >= 224 && self.octets()[0] <= 239
     }
@@ -571,7 +573,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(255, 255, 255, 255).is_broadcast(), true);
     /// assert_eq!(Ipv4Addr::new(236, 168, 10, 65).is_broadcast(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_broadcast(&self) -> bool {
         self.octets()[0] == 255 && self.octets()[1] == 255 &&
         self.octets()[2] == 255 && self.octets()[3] == 255
@@ -598,7 +600,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(203, 0, 113, 6).is_documentation(), true);
     /// assert_eq!(Ipv4Addr::new(193, 34, 17, 19).is_documentation(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_documentation(&self) -> bool {
         match(self.octets()[0], self.octets()[1], self.octets()[2], self.octets()[3]) {
             (192, 0, 2, _) => true,
@@ -622,7 +624,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(192, 0, 2, 255).to_ipv6_compatible(),
     ///            Ipv6Addr::new(0, 0, 0, 0, 0, 0, 49152, 767));
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn to_ipv6_compatible(&self) -> Ipv6Addr {
         Ipv6Addr::new(0, 0, 0, 0, 0, 0,
                       ((self.octets()[0] as u16) << 8) | self.octets()[1] as u16,
@@ -643,7 +645,7 @@ impl Ipv4Addr {
     /// assert_eq!(Ipv4Addr::new(192, 0, 2, 255).to_ipv6_mapped(),
     ///            Ipv6Addr::new(0, 0, 0, 0, 0, 65535, 49152, 767));
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn to_ipv6_mapped(&self) -> Ipv6Addr {
         Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff,
                       ((self.octets()[0] as u16) << 8) | self.octets()[1] as u16,
@@ -651,7 +653,7 @@ impl Ipv4Addr {
     }
 }
 
-#[stable(feature = "ip_addr", since = "1.7.0")]
+// #[stable(feature = "ip_addr", since = "1.7.0")]
 impl fmt::Display for IpAddr {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -661,21 +663,21 @@ impl fmt::Display for IpAddr {
     }
 }
 
-#[stable(feature = "ip_from_ip", since = "1.16.0")]
+// #[stable(feature = "ip_from_ip", since = "1.16.0")]
 impl From<Ipv4Addr> for IpAddr {
     fn from(ipv4: Ipv4Addr) -> IpAddr {
         IpAddr::V4(ipv4)
     }
 }
 
-#[stable(feature = "ip_from_ip", since = "1.16.0")]
+// #[stable(feature = "ip_from_ip", since = "1.16.0")]
 impl From<Ipv6Addr> for IpAddr {
     fn from(ipv6: Ipv6Addr) -> IpAddr {
         IpAddr::V6(ipv6)
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Display for Ipv4Addr {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         let octets = self.octets();
@@ -683,26 +685,26 @@ impl fmt::Display for Ipv4Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Debug for Ipv4Addr {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt::Display::fmt(self, fmt)
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Clone for Ipv4Addr {
     fn clone(&self) -> Ipv4Addr { *self }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl PartialEq for Ipv4Addr {
     fn eq(&self, other: &Ipv4Addr) -> bool {
         self.inner.s_addr == other.inner.s_addr
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialEq<Ipv4Addr> for IpAddr {
     fn eq(&self, other: &Ipv4Addr) -> bool {
         match *self {
@@ -712,7 +714,7 @@ impl PartialEq<Ipv4Addr> for IpAddr {
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialEq<IpAddr> for Ipv4Addr {
     fn eq(&self, other: &IpAddr) -> bool {
         match *other {
@@ -722,10 +724,10 @@ impl PartialEq<IpAddr> for Ipv4Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Eq for Ipv4Addr {}
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl hash::Hash for Ipv4Addr {
     fn hash<H: hash::Hasher>(&self, s: &mut H) {
         // `inner` is #[repr(packed)], so we need to copy `s_addr`.
@@ -733,14 +735,14 @@ impl hash::Hash for Ipv4Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl PartialOrd for Ipv4Addr {
     fn partial_cmp(&self, other: &Ipv4Addr) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialOrd<Ipv4Addr> for IpAddr {
     fn partial_cmp(&self, other: &Ipv4Addr) -> Option<Ordering> {
         match *self {
@@ -750,7 +752,7 @@ impl PartialOrd<Ipv4Addr> for IpAddr {
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialOrd<IpAddr> for Ipv4Addr {
     fn partial_cmp(&self, other: &IpAddr) -> Option<Ordering> {
         match *other {
@@ -760,7 +762,7 @@ impl PartialOrd<IpAddr> for Ipv4Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Ord for Ipv4Addr {
     fn cmp(&self, other: &Ipv4Addr) -> Ordering {
         ntoh(self.inner.s_addr).cmp(&ntoh(other.inner.s_addr))
@@ -776,7 +778,7 @@ impl FromInner<c::in_addr> for Ipv4Addr {
     }
 }
 
-#[stable(feature = "ip_u32", since = "1.1.0")]
+// #[stable(feature = "ip_u32", since = "1.1.0")]
 impl From<Ipv4Addr> for u32 {
     /// Convert an `Ipv4Addr` into a host byte order `u32`.
     ///
@@ -794,7 +796,7 @@ impl From<Ipv4Addr> for u32 {
     }
 }
 
-#[stable(feature = "ip_u32", since = "1.1.0")]
+// #[stable(feature = "ip_u32", since = "1.1.0")]
 impl From<u32> for Ipv4Addr {
     /// Convert a host byte order `u32` into an `Ipv4Addr`.
     ///
@@ -811,7 +813,7 @@ impl From<u32> for Ipv4Addr {
     }
 }
 
-#[stable(feature = "from_slice_v4", since = "1.9.0")]
+// #[stable(feature = "from_slice_v4", since = "1.9.0")]
 impl From<[u8; 4]> for Ipv4Addr {
     /// # Examples
     ///
@@ -826,7 +828,7 @@ impl From<[u8; 4]> for Ipv4Addr {
     }
 }
 
-#[stable(feature = "ip_from_slice", since = "1.17.0")]
+// #[stable(feature = "ip_from_slice", since = "1.17.0")]
 impl From<[u8; 4]> for IpAddr {
     /// Create an `IpAddr::V4` from a four element byte array.
     ///
@@ -855,7 +857,7 @@ impl Ipv6Addr {
     ///
     /// let addr = Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff);
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn new(a: u16, b: u16, c: u16, d: u16, e: u16, f: u16, g: u16,
                h: u16) -> Ipv6Addr {
         let mut addr: c::in6_addr = unsafe { mem::zeroed() };
@@ -881,12 +883,12 @@ impl Ipv6Addr {
     /// let addr = Ipv6Addr::localhost();
     /// assert_eq!(addr, Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1));
     /// ```
-    #[unstable(feature = "ip_constructors",
-               reason = "requires greater scrutiny before stabilization",
-               issue = "44582")]
-    pub fn localhost() -> Ipv6Addr {
-        Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)
-    }
+    // #[unstable(feature = "ip_constructors",
+    //            reason = "requires greater scrutiny before stabilization",
+    //            issue = "44582")]
+    // pub fn localhost() -> Ipv6Addr {
+    //     Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)
+    // }
 
     /// Creates a new IPv6 address representing the unspecified address: `::`
     ///
@@ -899,12 +901,12 @@ impl Ipv6Addr {
     /// let addr = Ipv6Addr::unspecified();
     /// assert_eq!(addr, Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0));
     /// ```
-    #[unstable(feature = "ip_constructors",
-               reason = "requires greater scrutiny before stabilization",
-               issue = "44582")]
-    pub fn unspecified() -> Ipv6Addr {
-        Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)
-    }
+    // #[unstable(feature = "ip_constructors",
+    //            reason = "requires greater scrutiny before stabilization",
+    //            issue = "44582")]
+    // pub fn unspecified() -> Ipv6Addr {
+    //     Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)
+    // }
 
     /// Returns the eight 16-bit segments that make up this address.
     ///
@@ -916,7 +918,7 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff).segments(),
     ///            [0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff]);
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn segments(&self) -> [u16; 8] {
         let arr = &self.inner.s6_addr;
         [
@@ -946,7 +948,7 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff).is_unspecified(), false);
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0).is_unspecified(), true);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_unspecified(&self) -> bool {
         self.segments() == [0, 0, 0, 0, 0, 0, 0, 0]
     }
@@ -966,7 +968,7 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff).is_loopback(), false);
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0x1).is_loopback(), true);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_loopback(&self) -> bool {
         self.segments() == [0, 0, 0, 0, 0, 0, 0, 1]
     }
@@ -1178,7 +1180,7 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0xff00, 0, 0, 0, 0, 0, 0, 0).is_multicast(), true);
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0xffff, 0xc00a, 0x2ff).is_multicast(), false);
     /// ```
-    #[stable(since = "1.7.0", feature = "ip_17")]
+    // #[stable(since = "1.7.0", feature = "ip_17")]
     pub fn is_multicast(&self) -> bool {
         (self.segments()[0] & 0xff00) == 0xff00
     }
@@ -1202,7 +1204,7 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1).to_ipv4(),
     ///            Some(Ipv4Addr::new(0, 0, 0, 1)));
     /// ```
-    #[stable(feature = "rust1", since = "1.0.0")]
+    // #[stable(feature = "rust1", since = "1.0.0")]
     pub fn to_ipv4(&self) -> Option<Ipv4Addr> {
         match self.segments() {
             [0, 0, 0, 0, 0, f, g, h] if f == 0 || f == 0xffff => {
@@ -1221,13 +1223,13 @@ impl Ipv6Addr {
     /// assert_eq!(Ipv6Addr::new(0xff00, 0, 0, 0, 0, 0, 0, 0).octets(),
     ///            [255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     /// ```
-    #[stable(feature = "ipv6_to_octets", since = "1.12.0")]
+    // #[stable(feature = "ipv6_to_octets", since = "1.12.0")]
     pub fn octets(&self) -> [u8; 16] {
         self.inner.s6_addr
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Display for Ipv6Addr {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match self.segments() {
@@ -1299,26 +1301,26 @@ impl fmt::Display for Ipv6Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl fmt::Debug for Ipv6Addr {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt::Display::fmt(self, fmt)
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Clone for Ipv6Addr {
     fn clone(&self) -> Ipv6Addr { *self }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl PartialEq for Ipv6Addr {
     fn eq(&self, other: &Ipv6Addr) -> bool {
         self.inner.s6_addr == other.inner.s6_addr
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialEq<IpAddr> for Ipv6Addr {
     fn eq(&self, other: &IpAddr) -> bool {
         match *other {
@@ -1328,7 +1330,7 @@ impl PartialEq<IpAddr> for Ipv6Addr {
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialEq<Ipv6Addr> for IpAddr {
     fn eq(&self, other: &Ipv6Addr) -> bool {
         match *self {
@@ -1338,24 +1340,24 @@ impl PartialEq<Ipv6Addr> for IpAddr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Eq for Ipv6Addr {}
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl hash::Hash for Ipv6Addr {
     fn hash<H: hash::Hasher>(&self, s: &mut H) {
         self.inner.s6_addr.hash(s)
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl PartialOrd for Ipv6Addr {
     fn partial_cmp(&self, other: &Ipv6Addr) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialOrd<Ipv6Addr> for IpAddr {
     fn partial_cmp(&self, other: &Ipv6Addr) -> Option<Ordering> {
         match *self {
@@ -1365,7 +1367,7 @@ impl PartialOrd<Ipv6Addr> for IpAddr {
     }
 }
 
-#[stable(feature = "ip_cmp", since = "1.16.0")]
+// #[stable(feature = "ip_cmp", since = "1.16.0")]
 impl PartialOrd<IpAddr> for Ipv6Addr {
     fn partial_cmp(&self, other: &IpAddr) -> Option<Ordering> {
         match *other {
@@ -1375,7 +1377,7 @@ impl PartialOrd<IpAddr> for Ipv6Addr {
     }
 }
 
-#[stable(feature = "rust1", since = "1.0.0")]
+// #[stable(feature = "rust1", since = "1.0.0")]
 impl Ord for Ipv6Addr {
     fn cmp(&self, other: &Ipv6Addr) -> Ordering {
         self.segments().cmp(&other.segments())
@@ -1391,7 +1393,7 @@ impl FromInner<c::in6_addr> for Ipv6Addr {
     }
 }
 
-#[stable(feature = "i128", since = "1.26.0")]
+// #[stable(feature = "i128", since = "1.26.0")]
 impl From<Ipv6Addr> for u128 {
     fn from(ip: Ipv6Addr) -> u128 {
         let ip = ip.segments();
@@ -1400,7 +1402,7 @@ impl From<Ipv6Addr> for u128 {
             ((ip[6] as u128) << 16) + (ip[7] as u128)
     }
 }
-#[stable(feature = "i128", since = "1.26.0")]
+// #[stable(feature = "i128", since = "1.26.0")]
 impl From<u128> for Ipv6Addr {
     fn from(ip: u128) -> Ipv6Addr {
         Ipv6Addr::new(
@@ -1411,7 +1413,7 @@ impl From<u128> for Ipv6Addr {
     }
 }
 
-#[stable(feature = "ipv6_from_octets", since = "1.9.0")]
+// #[stable(feature = "ipv6_from_octets", since = "1.9.0")]
 impl From<[u8; 16]> for Ipv6Addr {
     fn from(octets: [u8; 16]) -> Ipv6Addr {
         let mut inner: c::in6_addr = unsafe { mem::zeroed() };
@@ -1420,7 +1422,7 @@ impl From<[u8; 16]> for Ipv6Addr {
     }
 }
 
-#[stable(feature = "ipv6_from_segments", since = "1.16.0")]
+// #[stable(feature = "ipv6_from_segments", since = "1.16.0")]
 impl From<[u16; 8]> for Ipv6Addr {
     fn from(segments: [u16; 8]) -> Ipv6Addr {
         let [a, b, c, d, e, f, g, h] = segments;
@@ -1429,7 +1431,7 @@ impl From<[u16; 8]> for Ipv6Addr {
 }
 
 
-#[stable(feature = "ip_from_slice", since = "1.17.0")]
+// #[stable(feature = "ip_from_slice", since = "1.17.0")]
 impl From<[u8; 16]> for IpAddr {
     /// Create an `IpAddr::V6` from a sixteen element byte array.
     ///
@@ -1457,7 +1459,7 @@ impl From<[u8; 16]> for IpAddr {
     }
 }
 
-#[stable(feature = "ip_from_slice", since = "1.17.0")]
+// #[stable(feature = "ip_from_slice", since = "1.17.0")]
 impl From<[u16; 8]> for IpAddr {
     /// Create an `IpAddr::V6` from an eight element 16-bit array.
     ///
