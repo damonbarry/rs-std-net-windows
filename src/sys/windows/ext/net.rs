@@ -14,8 +14,7 @@
 
 // #[cfg(unix)]
 use libc;
-
-#[cfg(windows)]
+use sys::net::init;
 use winapi::{
     shared::ws2def::{SO_RCVTIMEO, SO_SNDTIMEO, SOCK_DGRAM, SOCK_STREAM, AF_UNIX},
     um::winsock2::{bind, connect, getpeername, getsockname, listen, recvfrom, sendto}
@@ -330,6 +329,7 @@ impl UnixStream {
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     pub fn connect<P: AsRef<Path>>(path: P) -> io::Result<UnixStream> {
+        init();
         fn inner(path: &Path) -> io::Result<UnixStream> {
             unsafe {
                 let inner = Socket::new_raw(AF_UNIX, SOCK_STREAM)?;
@@ -362,6 +362,7 @@ impl UnixStream {
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     // Windows dosn't support socketpair()...this would need to be emulated
     // pub fn pair() -> io::Result<(UnixStream, UnixStream)> {
+    //     init();
     //     let (i1, i2) = Socket::new_pair(AF_UNIX, SOCK_STREAM)?;
     //     Ok((UnixStream(i1), UnixStream(i2)))
     // }
@@ -772,6 +773,7 @@ impl UnixListener {
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     pub fn bind<P: AsRef<Path>>(path: P) -> io::Result<UnixListener> {
+        init();
         fn inner(path: &Path) -> io::Result<UnixListener> {
             unsafe {
                 let inner = Socket::new_raw(AF_UNIX, SOCK_STREAM)?;
@@ -1054,6 +1056,7 @@ impl UnixDatagram {
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     pub fn bind<P: AsRef<Path>>(path: P) -> io::Result<UnixDatagram> {
+        init();
         fn inner(path: &Path) -> io::Result<UnixDatagram> {
             unsafe {
                 let socket = UnixDatagram::unbound()?;
@@ -1084,6 +1087,7 @@ impl UnixDatagram {
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     pub fn unbound() -> io::Result<UnixDatagram> {
+        init();
         let inner = Socket::new_raw(AF_UNIX, SOCK_DGRAM)?;
         Ok(UnixDatagram(inner))
     }
@@ -1108,6 +1112,7 @@ impl UnixDatagram {
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     // Windows dosn't support socketpair()...this would need to be emulated
     // pub fn pair() -> io::Result<(UnixDatagram, UnixDatagram)> {
+    //     init();
     //     let (i1, i2) = Socket::new_pair(AF_UNIX, SOCK_DGRAM)?;
     //     Ok((UnixDatagram(i1), UnixDatagram(i2)))
     // }
@@ -1137,6 +1142,7 @@ impl UnixDatagram {
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
     pub fn connect<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+        init();
         fn inner(d: &UnixDatagram, path: &Path) -> io::Result<()> {
             unsafe {
                 let (addr, len) = sockaddr_un(path)?;
