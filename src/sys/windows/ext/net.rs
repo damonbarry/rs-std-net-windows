@@ -55,7 +55,7 @@ use net::Shutdown;
 use std::path::Path;
 use std::time::Duration;
 // use sys::{self, cvt};
-use sys::cvt;
+use sys::net::cvt;
 use sys::net::Socket;
 // use sys_common::{self, AsInner, FromInner, IntoInner};
 use sys_common::AsInner;
