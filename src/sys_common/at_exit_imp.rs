@@ -12,9 +12,11 @@
 //!
 //! Documentation can be found on the `rt::at_exit` function.
 
-use boxed::FnBox;
-use ptr;
-use mem;
+#![allow(dead_code)]
+
+use std::boxed::FnBox;
+use std::ptr;
+use std::mem;
 use sys_common::mutex::Mutex;
 
 type Queue = Vec<Box<dyn FnBox()>>;

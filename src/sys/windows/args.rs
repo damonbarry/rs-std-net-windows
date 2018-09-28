@@ -10,13 +10,13 @@
 
 #![allow(dead_code)] // runtime init functions not used during testing
 
-use os::windows::prelude::*;
+use std::os::windows::prelude::*;
 use sys::c;
-use slice;
-use ops::Range;
-use ffi::OsString;
+use std::slice;
+use std::ops::Range;
+use std::ffi::OsString;
 use libc::{c_int, c_void};
-use fmt;
+use std::fmt;
 
 pub unsafe fn init(_argc: isize, _argv: *const *const u8) { }
 

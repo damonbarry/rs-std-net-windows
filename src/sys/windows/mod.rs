@@ -23,7 +23,7 @@ pub use libc::strlen;
 
 #[macro_use] pub mod compat;
 
-// pub mod args;
+pub mod args;
 // #[cfg(feature = "backtrace")]
 // pub mod backtrace;
 pub mod c;
@@ -35,9 +35,9 @@ pub mod c;
 pub mod ext;
 // pub mod fast_thread_local;
 // pub mod fs;
-// pub mod handle;
+pub mod handle;
 // pub mod memchr;
-// pub mod mutex;
+pub mod mutex;
 pub mod net;
 // pub mod os;
 // pub mod os_str;
@@ -46,11 +46,11 @@ pub mod net;
 // pub mod process;
 // pub mod rand;
 // pub mod rwlock;
-// pub mod stack_overflow;
+pub mod stack_overflow;
 // pub mod thread;
 // pub mod thread_local;
 // pub mod time;
-// pub mod stdio;
+pub mod stdio;
 
 #[cfg(not(test))]
 pub fn init() {

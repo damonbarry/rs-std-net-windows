@@ -367,9 +367,9 @@ impl Ipv4Addr {
     // #[unstable(feature = "ip_constructors",
     //            reason = "requires greater scrutiny before stabilization",
     //            issue = "44582")]
-    // pub fn localhost() -> Ipv4Addr {
-    //     Ipv4Addr::new(127, 0, 0, 1)
-    // }
+    pub fn localhost() -> Ipv4Addr {
+        Ipv4Addr::new(127, 0, 0, 1)
+    }
 
     /// Creates a new IPv4 address representing an unspecified address: 0.0.0.0
     ///
@@ -385,9 +385,9 @@ impl Ipv4Addr {
     // #[unstable(feature = "ip_constructors",
     //            reason = "requires greater scrutiny before stabilization",
     //            issue = "44582")]
-    // pub fn unspecified() -> Ipv4Addr {
-    //     Ipv4Addr::new(0, 0, 0, 0)
-    // }
+    pub fn unspecified() -> Ipv4Addr {
+        Ipv4Addr::new(0, 0, 0, 0)
+    }
 
     /// Returns the four eight-bit integers that make up this address.
     ///
@@ -886,9 +886,9 @@ impl Ipv6Addr {
     // #[unstable(feature = "ip_constructors",
     //            reason = "requires greater scrutiny before stabilization",
     //            issue = "44582")]
-    // pub fn localhost() -> Ipv6Addr {
-    //     Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)
-    // }
+    pub fn localhost() -> Ipv6Addr {
+        Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1)
+    }
 
     /// Creates a new IPv6 address representing the unspecified address: `::`
     ///
@@ -904,9 +904,9 @@ impl Ipv6Addr {
     // #[unstable(feature = "ip_constructors",
     //            reason = "requires greater scrutiny before stabilization",
     //            issue = "44582")]
-    // pub fn unspecified() -> Ipv6Addr {
-    //     Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)
-    // }
+    pub fn unspecified() -> Ipv6Addr {
+        Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)
+    }
 
     /// Returns the eight 16-bit segments that make up this address.
     ///

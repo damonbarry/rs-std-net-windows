@@ -24,9 +24,10 @@
 
 #![allow(missing_docs)]
 #![allow(missing_debug_implementations)]
+#![allow(dead_code)]
 
-// use std::sync::Once;
-// use sys;
+use std::sync::Once;
+use sys;
 
 // macro_rules! rtabort {
 //     ($($t:tt)*) => (::sys_common::util::abort(format_args!($($t)*)))
@@ -38,19 +39,19 @@
 //     })
 // }
 
-// pub mod at_exit_imp;
+pub mod at_exit_imp;
 // #[cfg(feature = "backtrace")]
 // pub mod backtrace;
 // pub mod condvar;
-// pub mod io;
-// pub mod mutex;
+pub mod io;
+pub mod mutex;
 // pub mod poison;
 // pub mod remutex;
 // pub mod rwlock;
 // pub mod thread;
 // pub mod thread_info;
 // pub mod thread_local;
-// pub mod util;
+pub mod util;
 // pub mod wtf8;
 // pub mod bytestring;
 // pub mod process;
@@ -107,19 +108,19 @@ pub trait FromInner<Inner> {
 /// closure will be run once the main thread exits. Returns `Err` to indicate
 /// that the closure could not be registered, meaning that it is not scheduled
 /// to be run.
-// pub fn at_exit<F: FnOnce() + Send + 'static>(f: F) -> Result<(), ()> {
-//     if at_exit_imp::push(Box::new(f)) {Ok(())} else {Err(())}
-// }
+pub fn at_exit<F: FnOnce() + Send + 'static>(f: F) -> Result<(), ()> {
+    if at_exit_imp::push(Box::new(f)) {Ok(())} else {Err(())}
+}
 
 /// One-time runtime cleanup.
-// pub fn cleanup() {
-//     static CLEANUP: Once = Once::new();
-//     CLEANUP.call_once(|| unsafe {
-//         sys::args::cleanup();
-//         sys::stack_overflow::cleanup();
-//         at_exit_imp::cleanup();
-//     });
-// }
+pub fn cleanup() {
+    static CLEANUP: Once = Once::new();
+    CLEANUP.call_once(|| unsafe {
+        sys::args::cleanup();
+        sys::stack_overflow::cleanup();
+        at_exit_imp::cleanup();
+    });
+}
 
 // Computes (value*numer)/denom without overflow, as long as both
 // (numer*denom) and the overall result fit into i64 (which is the case

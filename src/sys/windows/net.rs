@@ -18,11 +18,10 @@ use libc::{c_int, c_void, c_ulong, c_long};
 use std::mem;
 use net::{SocketAddr, Shutdown};
 use std::ptr;
-// use std::sync::Once;
+use std::sync::Once;
 use sys::c;
 use sys;
-// use sys_common::{self, AsInner, FromInner, IntoInner};
-use sys_common::{AsInner, FromInner, IntoInner};
+use sys_common::{self, AsInner, FromInner, IntoInner};
 use sys_common::net;
 use std::time::Duration;
 
@@ -41,16 +40,16 @@ pub struct Socket(c::SOCKET);
 /// Checks whether the Windows socket interface has been started already, and
 /// if not, starts it.
 pub fn init() {
-    // static START: Once = Once::new();
+    static START: Once = Once::new();
 
-    // START.call_once(|| unsafe {
-    //     let mut data: c::WSADATA = mem::zeroed();
-    //     let ret = c::WSAStartup(0x202, // version 2.2
-    //                             &mut data);
-    //     assert_eq!(ret, 0);
+    START.call_once(|| unsafe {
+        let mut data: c::WSADATA = mem::zeroed();
+        let ret = c::WSAStartup(0x202, // version 2.2
+                                &mut data);
+        assert_eq!(ret, 0);
 
-    //     let _ = sys_common::at_exit(|| { c::WSACleanup(); });
-    // });
+        let _ = sys_common::at_exit(|| { c::WSACleanup(); });
+    });
 }
 
 /// Returns the last error from the Windows socket interface.

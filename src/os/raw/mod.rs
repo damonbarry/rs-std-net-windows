@@ -133,9 +133,9 @@ impl fmt::Debug for c_void {
 #[cfg(test)]
 #[allow(unused_imports)]
 mod tests {
-    use any::TypeId;
+    use std::any::TypeId;
     use libc;
-    use mem;
+    use std::mem;
 
     macro_rules! ok {
         ($($t:ident)*) => {$(

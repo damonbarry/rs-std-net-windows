@@ -8,14 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![unstable(issue = "0", feature = "windows_handle")]
+// #![unstable(issue = "0", feature = "windows_handle")]
 
-use cmp;
-use io::{ErrorKind, Read};
-use io;
-use mem;
-use ops::Deref;
-use ptr;
+use std::cmp;
+use std::io::{ErrorKind, Read};
+use std::io;
+use std::mem;
+use std::ops::Deref;
+use std::ptr;
 use sys::c;
 use sys::cvt;
 

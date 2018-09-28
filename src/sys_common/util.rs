@@ -8,10 +8,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use fmt;
-use io::prelude::*;
+#![allow(dead_code)]
+
+use std::fmt;
+use std::io::prelude::*;
 use sys::stdio::{Stderr, stderr_prints_nothing};
-use thread;
+use std::thread;
 
 pub fn dumb_print(args: fmt::Arguments) {
     if stderr_prints_nothing() {

@@ -7,15 +7,16 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
+#[allow(dead_code)]
 pub const DEFAULT_BUF_SIZE: usize = 8 * 1024;
 
 #[cfg(test)]
 #[allow(dead_code)] // not used on emscripten
 pub mod test {
-    use path::{Path, PathBuf};
-    use env;
+    use std::path::{Path, PathBuf};
+    use std::env;
     use rand::{self, Rng};
-    use fs;
+    use std::fs;
 
     pub struct TempDir(PathBuf);
 

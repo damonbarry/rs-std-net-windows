@@ -615,7 +615,7 @@ impl fmt::Debug for UdpSocket {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use collections::HashMap;
+    use std::collections::HashMap;
 
     #[test]
     fn no_lookup_host_duplicates() {

@@ -8,15 +8,15 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![unstable(issue = "0", feature = "windows_stdio")]
+// #![unstable(issue = "0", feature = "windows_stdio")]
 
-use io::prelude::*;
+use std::io::prelude::*;
 
-use cmp;
-use io::{self, Cursor};
-use ptr;
-use str;
-use sync::Mutex;
+use std::cmp;
+use std::io::{self, Cursor};
+use std::ptr;
+use std::str;
+use std::sync::Mutex;
 use sys::c;
 use sys::cvt;
 use sys::handle::Handle;
@@ -145,7 +145,7 @@ impl Stdin {
     }
 }
 
-#[unstable(reason = "not public", issue = "0", feature = "fd_read")]
+// #[unstable(reason = "not public", issue = "0", feature = "fd_read")]
 impl<'a> Read for &'a Stdin {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         (**self).read(buf)
@@ -208,7 +208,7 @@ fn invalid_encoding() -> io::Error {
 
 fn readconsole_input_control(wakeup_mask: c::ULONG) -> c::CONSOLE_READCONSOLE_CONTROL {
     c::CONSOLE_READCONSOLE_CONTROL {
-        nLength: ::mem::size_of::<c::CONSOLE_READCONSOLE_CONTROL>() as c::ULONG,
+        nLength: ::std::mem::size_of::<c::CONSOLE_READCONSOLE_CONTROL>() as c::ULONG,
         nInitialChars: 0,
         dwCtrlWakeupMask: wakeup_mask,
         dwControlKeyState: 0,
