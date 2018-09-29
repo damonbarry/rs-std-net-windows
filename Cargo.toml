@@ -1,5 +1,5 @@
 [package]
-name = "std-net-windows"
+name = "rs-std-net-windows"
 version = "0.1.0"
 authors = ["Damon Barry <damonb@microsoft.com>"]
 
