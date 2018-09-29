@@ -357,7 +357,7 @@ impl Ipv4Addr {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```ignore
     /// #![feature(ip_constructors)]
     /// use std::net::Ipv4Addr;
     ///
@@ -375,7 +375,7 @@ impl Ipv4Addr {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```ignore
     /// #![feature(ip_constructors)]
     /// use std::net::Ipv4Addr;
     ///
@@ -876,7 +876,7 @@ impl Ipv6Addr {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```ignore
     /// #![feature(ip_constructors)]
     /// use std::net::Ipv6Addr;
     ///
@@ -894,7 +894,7 @@ impl Ipv6Addr {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```ignore
     /// #![feature(ip_constructors)]
     /// use std::net::Ipv6Addr;
     ///
