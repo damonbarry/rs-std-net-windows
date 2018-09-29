@@ -14,7 +14,6 @@
 
 // #[cfg(unix)]
 use libc;
-use sys::net::init;
 use winapi::{
     shared::ws2def::{SO_RCVTIMEO, SO_SNDTIMEO, SOCK_DGRAM, SOCK_STREAM, AF_UNIX},
     um::winsock2::{bind, connect, getpeername, getsockname, listen, recvfrom, sendto}
@@ -44,6 +43,7 @@ pub mod netc {
 }
 
 use std::ascii;
+use std::cmp;
 // use std::ffi::OsStr;
 use std::fmt;
 use std::io::{self, Initializer};
@@ -55,7 +55,7 @@ use net::Shutdown;
 use std::path::Path;
 use std::time::Duration;
 // use sys::{self, cvt};
-use sys::net::cvt;
+use sys::net::{cvt, init, wrlen_t};
 use sys::net::Socket;
 // use sys_common::{self, AsInner, FromInner, IntoInner};
 use sys_common::AsInner;
@@ -250,7 +250,7 @@ impl SocketAddr {
             AddressKind::Abstract(&path[1..len])
         } else {
             use std::ffi::CStr;
-            let pathname = unsafe { CStr::from_bytes_with_nul_unchecked(&path[..len - 1]) };
+            let pathname = unsafe { CStr::from_bytes_with_nul_unchecked(&path[..len]) };
             AddressKind::Pathname(Path::new(pathname.to_str().unwrap()))
         }
     }
@@ -612,26 +612,33 @@ impl<'a> io::Read for &'a UnixStream {
 }
 
 // #[stable(feature = "unix_socket", since = "1.10.0")]
-// impl io::Write for UnixStream {
-//     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-//         io::Write::write(&mut &*self, buf)
-//     }
+impl io::Write for UnixStream {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        io::Write::write(&mut &*self, buf)
+    }
 
-//     fn flush(&mut self) -> io::Result<()> {
-//         io::Write::flush(&mut &*self)
-//     }
-// }
+    fn flush(&mut self) -> io::Result<()> {
+        io::Write::flush(&mut &*self)
+    }
+}
 
 // #[stable(feature = "unix_socket", since = "1.10.0")]
-// impl<'a> io::Write for &'a UnixStream {
-//     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-//         self.0.write(buf)
-//     }
+impl<'a> io::Write for &'a UnixStream {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        let len = cmp::min(buf.len(), <wrlen_t>::max_value() as usize) as wrlen_t;
+        let ret = cvt(unsafe {
+            netc::send(*self.0.as_inner(),
+                       buf.as_ptr() as *const libc::c_void,
+                       len,
+                       MSG_NOSIGNAL)
+        })?;
+        Ok(ret as usize)
+    }
 
-//     fn flush(&mut self) -> io::Result<()> {
-//         Ok(())
-//     }
-// }
+    fn flush(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+}
 
 // // #[stable(feature = "unix_socket", since = "1.10.0")]
 // impl AsRawFd for UnixStream {
@@ -1318,9 +1325,16 @@ impl UnixDatagram {
     /// sock.send(b"omelette au fromage").expect("send_to function failed");
     /// ```
     // #[stable(feature = "unix_socket", since = "1.10.0")]
-    // pub fn send(&self, buf: &[u8]) -> io::Result<usize> {
-    //     self.0.write(buf)
-    // }
+    pub fn send(&self, buf: &[u8]) -> io::Result<usize> {
+        let len = cmp::min(buf.len(), <wrlen_t>::max_value() as usize) as wrlen_t;
+        let ret = cvt(unsafe {
+            netc::send(*self.0.as_inner(),
+                       buf.as_ptr() as *const libc::c_void,
+                       len,
+                       MSG_NOSIGNAL)
+        })?;
+        Ok(ret as usize)
+    }
 
     /// Sets the read timeout for the socket.
     ///
@@ -1543,13 +1557,13 @@ mod test {
             let mut buf = [0; 5];
             or_panic!(stream.read(&mut buf));
             assert_eq!(&msg1[..], &buf[..]);
-            // or_panic!(stream.write_all(msg2));
+            or_panic!(stream.write_all(msg2));
         });
 
         let mut stream = or_panic!(UnixStream::connect(&socket_path));
         assert_eq!(Some(&*socket_path),
                    stream.peer_addr().unwrap().as_pathname());
-        // or_panic!(stream.write_all(msg1));
+        or_panic!(stream.write_all(msg1));
         let mut buf = vec![];
         or_panic!(stream.read_to_end(&mut buf));
         assert_eq!(&msg2[..], &buf[..]);
@@ -1591,9 +1605,9 @@ mod test {
         let listener = or_panic!(UnixListener::bind(&socket_path));
         let thread = thread::spawn(move || {
             #[allow(unused_mut)]
-            let mut _stream = or_panic!(listener.accept()).0;
-            // or_panic!(stream.write_all(msg1));
-            // or_panic!(stream.write_all(msg2));
+            let mut stream = or_panic!(listener.accept()).0;
+            or_panic!(stream.write_all(msg1));
+            or_panic!(stream.write_all(msg2));
         });
 
         let mut stream = or_panic!(UnixStream::connect(&socket_path));
@@ -1623,8 +1637,8 @@ mod test {
         });
 
         for _ in 0..2 {
-            let mut _stream = or_panic!(UnixStream::connect(&socket_path));
-            // or_panic!(stream.write_all(&[0]));
+            let mut stream = or_panic!(UnixStream::connect(&socket_path));
+            or_panic!(stream.write_all(&[0]));
         }
 
         thread.join().unwrap();
@@ -1708,8 +1722,8 @@ mod test {
         or_panic!(stream.set_read_timeout(Some(Duration::from_millis(1000))));
 
         #[allow(unused_mut)]
-        let mut _other_end = or_panic!(listener.accept()).0;
-        // or_panic!(other_end.write_all(b"hello world"));
+        let mut other_end = or_panic!(listener.accept()).0;
+        or_panic!(other_end.write_all(b"hello world"));
 
         let mut buf = [0; 11];
         or_panic!(stream.read(&mut buf));
